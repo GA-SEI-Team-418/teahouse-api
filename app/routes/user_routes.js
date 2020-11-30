@@ -135,7 +135,7 @@ router.patch('/update-username', requireToken, (req, res, next) => {
   User.findById(req.user.id)
     // save user outside the promise chain
     .then(user => {
-      user.username = req.body.username
+      user.username = req.body.username.new
       return user.save()
     })
     // respond with no content and status 200
