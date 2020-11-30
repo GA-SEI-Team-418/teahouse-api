@@ -153,4 +153,10 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+router.delete('/delete-account', requireToken, (req, res, next) => {
+  User.deleteOne({ _id: req.user._id })
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
 module.exports = router
