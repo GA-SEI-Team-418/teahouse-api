@@ -82,23 +82,17 @@ const io = require('socket.io')(http, {
   }
 })
 
-let interval
-
 io.on('connection', socket => {
-  console.log('New client connected')
-  if (interval) clearInterval(interval)
+  // console.log('New client connected')
 
-  interval = setInterval(() => getApiAndEmit(socket), 1000)
-  socket.on('disconnect', () => {
-    console.log('Client disconnected')
-    clearInterval(interval)
+  socket.on('chat message', msg => {
+    io.emit('chat message', msg)
   })
-})
 
-const getApiAndEmit = socket => {
-  const response = new Date()
-  socket.emit('FromAPI', response)
-}
+  // socket.on('disconnect', () => {
+  //   console.log('Client disconnected')
+  // })
+})
 
 // run API on designated port (4741 in this case)
 http.listen(port, () => {
