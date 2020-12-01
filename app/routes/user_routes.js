@@ -130,6 +130,8 @@ router.patch('/change-password', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// UPDATE username
+// PATCH /update-username
 router.patch('/update-username', requireToken, (req, res, next) => {
   // `req.user` will be determined by decoding the token payload
   User.findById(req.user.id)
@@ -144,6 +146,8 @@ router.patch('/update-username', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// SIGN OUT
+// DELETE /sign-out
 router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
   req.user.token = crypto.randomBytes(16)
@@ -153,6 +157,8 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// DELETE account
+// DELETE /delete-account
 router.delete('/delete-account', requireToken, (req, res, next) => {
   User.deleteOne({ _id: req.user._id })
     .then(() => res.sendStatus(204))
