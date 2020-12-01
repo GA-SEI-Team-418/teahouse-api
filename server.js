@@ -71,8 +71,37 @@ app.use(userRoutes)
 // passed any error messages from them
 app.use(errorHandler)
 
+// set up the socket.io stuff
+// followed tutorial on this website for initial setup
+// https://www.valentinog.com/blog/socket-react/
+const http = require('http').createServer(app)
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:7165',
+    methods: ["GET", 'POST']
+  }
+})
+
+let interval
+
+io.on('connection', socket => {
+  console.log('New client connected')
+  if (interval) clearInterval(interval)
+
+  interval = setInterval(() => getApiAndEmit(socket), 1000)
+  socket.on('disconnect', () => {
+    console.log('Client disconnected')
+    clearInterval(interval)
+  })
+})
+
+const getApiAndEmit = socket => {
+  const response = new Date()
+  socket.emit('FromAPI', response)
+}
+
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
+http.listen(port, () => {
   console.log('listening on port ' + port)
 })
 
