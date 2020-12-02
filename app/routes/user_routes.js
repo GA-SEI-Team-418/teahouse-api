@@ -45,6 +45,7 @@ router.post('/sign-up', (req, res, next) => {
       // return necessary params to create a user
       return {
         email: req.body.credentials.email,
+        username: req.body.credentials.username,
         hashedPassword: hash
       }
     })
@@ -129,11 +130,37 @@ router.patch('/change-password', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// UPDATE username
+// PATCH /update-username
+router.patch('/update-username', requireToken, (req, res, next) => {
+  // `req.user` will be determined by decoding the token payload
+  User.findById(req.user.id)
+    // save user outside the promise chain
+    .then(user => {
+      user.username = req.body.username.new
+      return user.save()
+    })
+    // respond with no content and status 200
+    .then(() => res.sendStatus(204))
+    // pass any errors along to the error handler
+    .catch(next)
+})
+
+// SIGN OUT
+// DELETE /sign-out
 router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
   req.user.token = crypto.randomBytes(16)
   // save the token and respond with 204
   req.user.save()
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
+// DELETE account
+// DELETE /delete-account
+router.delete('/delete-account', requireToken, (req, res, next) => {
+  User.deleteOne({ _id: req.user._id })
     .then(() => res.sendStatus(204))
     .catch(next)
 })

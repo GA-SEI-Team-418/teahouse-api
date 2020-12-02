@@ -27,9 +27,11 @@ const clientDevPort = 7165
 // establish database connection
 // use new version of URL parser
 // use createIndex instead of deprecated ensureIndex
+// use unifiedTopology to avoid deprecation warning
 mongoose.connect(db, {
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 })
 
 // instantiate express application object
@@ -69,8 +71,31 @@ app.use(userRoutes)
 // passed any error messages from them
 app.use(errorHandler)
 
+// set up the socket.io stuff
+// followed tutorial on this website for initial setup
+// https://www.valentinog.com/blog/socket-react/
+const http = require('http').createServer(app)
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:7165',
+    methods: ["GET", 'POST']
+  }
+})
+
+io.on('connection', socket => {
+  // console.log('New client connected')
+
+  socket.on('chat message', msg => {
+    io.emit('chat message', msg)
+  })
+
+  // socket.on('disconnect', () => {
+  //   console.log('Client disconnected')
+  // })
+})
+
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
+http.listen(port, () => {
   console.log('listening on port ' + port)
 })
 
