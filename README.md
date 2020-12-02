@@ -25,6 +25,17 @@ In planning for this project, we came together as a team to discuss how we wante
 - Would like to be able to add emoji picker
 - Would like to be able to have users pick a profile picture
 
+### Routes
+
+| Verb   | URI Pattern            | Controller#Action      |
+|--------|------------------------|------------------------|
+| POST   | `/sign-up`             | `users#signup`         |
+| POST   | `/sign-in`             | `users#signin`         |
+| PATCH  | `/change-password/`    | `users#changepw`       |
+| PATCH  | `/update-username`     | `users#updateusername` |
+| DELETE | `/sign-out/`           | `users#signout`        |
+| DELETE | `/delete-account`      | `users#deleteaccount`  |
+
 ## Images
 
 ---
