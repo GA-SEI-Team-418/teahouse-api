@@ -77,7 +77,7 @@ app.use(errorHandler)
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
   cors: {
-    origin: 'http://localhost:7165',
+    origin: 'https://ga-sei-team-418.github.io',
     methods: ["GET", 'POST']
   }
 })
